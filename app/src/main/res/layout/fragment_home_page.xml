@@ -1,0 +1,10 @@
+
+<com.jcodecraeer.xrecyclerview.XRecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/BmobGO_XRecyclerView"
+    android:layout_margin="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+</com.jcodecraeer.xrecyclerview.XRecyclerView>

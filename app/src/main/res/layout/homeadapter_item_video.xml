@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/item_video_carview"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    card_view:contentPadding="3dp"
+    card_view:cardElevation="3dp"
+    card_view:cardCornerRadius="3dp"
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <VideoView
+                android:id="@+id/item_videoview"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
+        <ImageView
+            android:id="@+id/item_video_img"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+            <ImageView
+                android:id="@+id/item_video_play"
+                android:src="@mipmap/play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/item_video_title"
+            android:text="视频标题"
+            android:textColor="#000"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/item_video_playcontent"
+            android:text="999播放"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
