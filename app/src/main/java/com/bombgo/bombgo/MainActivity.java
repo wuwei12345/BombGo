@@ -26,6 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import fragment.BmobFragment;
 import fragment.RankingFragment;
+import fragment.channelFragment;
 import initerface.Initerface;
 
 public class MainActivity extends AppCompatActivity
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             actViewpage.setCurrentItem(1);
         } else if (id == R.id.nav_slideshow) {
-
+            actViewpage.setCurrentItem(2);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -108,11 +109,11 @@ public class MainActivity extends AppCompatActivity
         navView.setNavigationItemSelectedListener(this);
         BmobFragment bm1=new BmobFragment();
         RankingFragment bm2=new RankingFragment();
-//        BmobFragment bm3=new BmobFragment();
+        channelFragment bm3=new channelFragment();
 //        BmobFragment bm4=new BmobFragment();
         fragmentlist.add(bm1);
         fragmentlist.add(bm2);
-//        fragmentlist.add(bm3);
+        fragmentlist.add(bm3);
 //        fragmentlist.add(bm4);
 
         adapter=new actViewAdapter(getSupportFragmentManager(),fragmentlist);

@@ -1,10 +1,13 @@
 package Utils;
 
+import java.nio.channels.Channel;
+
 import bean.ArticleBean;
 import bean.HomeBean;
 import bean.ReadBean;
 import bean.UserSubmissionBean;
 import bean.bmobGoBean;
+import bean.channelBean;
 import bean.videoBean;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -82,5 +85,10 @@ public class RetrofitUtils {
          */
         @GET
         public Observable<ReadBean> CommentDataBean(@Url()String url);
+        /**
+        * 频道
+        */
+        @GET("index?&per_page=10&")
+        public Observable<channelBean> channelDataBean(@Query("page") String page);
     }
 }

@@ -27,17 +27,21 @@ public class BmobUri {
     public static final String DAY="day";
     public static final String WEEK="week";
     public static final String MONTH="month";
-    //接口地址
-    public static String BMOBGO_URI = "http://dailyapi.ibaozou.com/";
-    //文章内容地址
-    public static String BMOBGO_ARTICLE = "http://dailyapi.ibaozou.com/api/v31/documents/";
     /**
      * 刷新状态
      * TYPE_DOWN：下拉
      * TYPE_LOAD：上拉
      */
-    public static int TYPE_DOWN = 0;
-    public static int TYPE_LOAD = 1;
+    public static final int TYPE_DOWN = 0;
+    public static final int TYPE_LOAD = 1;
+    //接口地址
+    public static String BMOBGO_URI = "http://dailyapi.ibaozou.com/";
+    //文章内容地址
+    public static String BMOBGO_ARTICLE = "http://dailyapi.ibaozou.com/api/v31/documents/";
+    /**
+     * 频道
+     */
+    public static String CHANNEL_URI="http://dailyapi.ibaozou.com/api/v31/channels/";
     /**
      * 加载网址
      * WEB_URI：加载第二个网址
@@ -75,7 +79,8 @@ public class BmobUri {
 		赞：http://dailyapi.ibaozou.com/api/v31/rank/vote/week
 		评论：http://dailyapi.ibaozou.com/api/v31/rank/comment/week
 	    （30天）
-		阅读：http://dailyapi.ibaozou.com/api/v31/rank/read/month 		赞：http://dailyapi.ibaozou.com/api/v31/rank/vote/month
+		阅读：http://dailyapi.ibaozou.com/api/v31/rank/read/month
+		赞：http://dailyapi.ibaozou.com/api/v31/rank/vote/month
 		评论：http://dailyapi.ibaozou.com/api/v31/rank/comment/month
 频道：http://dailyapi.ibaozou.com/api/v31/channels/index?page=1&per_page=10& （page后面跟页码累加）
 
