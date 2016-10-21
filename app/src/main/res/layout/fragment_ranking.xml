@@ -7,21 +7,21 @@
     tools:context="fragment.BmobFragment">
 
     <android.support.design.widget.TabLayout
-    android:id="@+id/act_bombgo_tablayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_alignParentTop="true">
+        android:id="@+id/act_ranking_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
     </android.support.design.widget.TabLayout>
     <android.support.v4.view.ViewPager
-    android:id="@+id/act_bmob_Mvp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+        android:id="@+id/act_ranking_Mvp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
 
     <TextView
-        android:id="@+id/act_bmob_error"
+        android:id="@+id/act_ranking_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="网络错误，点击重新加载"

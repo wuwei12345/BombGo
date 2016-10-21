@@ -2,6 +2,7 @@ package Utils;
 
 import bean.ArticleBean;
 import bean.HomeBean;
+import bean.ReadBean;
 import bean.UserSubmissionBean;
 import bean.bmobGoBean;
 import bean.videoBean;
@@ -20,14 +21,21 @@ import rx.Observable;
  * Created by Administrator on 2016/8/18.
  */
 public class RetrofitUtils {
+    private static RetrofitUtils RX = new RetrofitUtils();
+
     private RetrofitUtils() {
     }
-
-    private static RetrofitUtils RX = new RetrofitUtils();
 
     //静态工厂方法
     public static RetrofitUtils getInstance() {
         return RX;
+    }
+
+    public Retrofit getRetrofit(String uri) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(uri).
+                addCallAdapterFactory(RxJavaCallAdapterFactory.create()).
+                addConverterFactory(GsonConverterFactory.create()).build();
+        return retrofit;
     }
 
 
@@ -59,13 +67,20 @@ public class RetrofitUtils {
          */
         @GET
         public Observable<ArticleBean> ArticleDataBean(@Url()String url);
-    }
-
-
-    public Retrofit getRetrofit(String uri) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(uri).
-                addCallAdapterFactory(RxJavaCallAdapterFactory.create()).
-                addConverterFactory(GsonConverterFactory.create()).build();
-        return retrofit;
+        /**
+         * 阅读
+         */
+        @GET
+        public Observable<ReadBean> ReadDataBean(@Url()String url);
+        /**
+         * 赞
+         */
+        @GET
+        public Observable<ReadBean> GOODDataBean(@Url()String url);
+        /**
+         * 评论
+         */
+        @GET
+        public Observable<ReadBean> CommentDataBean(@Url()String url);
     }
 }

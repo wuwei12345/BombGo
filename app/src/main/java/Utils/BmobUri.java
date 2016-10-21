@@ -5,6 +5,50 @@ package Utils;
  */
 
 public class BmobUri {
+    /**
+     * 页面标识
+     * RANKING:排行榜
+     * HOMEPAGEL:首页
+     */
+    public static final String RANKING="RANKING";
+    public static final String HOMEPAGE="HOMEPAGE";
+    /**
+     * 排行榜
+     * READ_URI:阅读
+     * GOOD_URI：赞
+     * COMMENT_URI：评论
+     */
+    public static final String READ_URI="http://dailyapi.ibaozou.com/api/v31/rank/vote/";
+    public static final String GOOD_URI="http://dailyapi.ibaozou.com/api/v31/rank/vote/";
+    public static final String COMMENT_URI="http://dailyapi.ibaozou.com/api/v31/rank/comment/";
+    /**
+     * 今天，7天，30天
+     */
+    public static final String DAY="day";
+    public static final String WEEK="week";
+    public static final String MONTH="month";
+    //接口地址
+    public static String BMOBGO_URI = "http://dailyapi.ibaozou.com/";
+    //文章内容地址
+    public static String BMOBGO_ARTICLE = "http://dailyapi.ibaozou.com/api/v31/documents/";
+    /**
+     * 刷新状态
+     * TYPE_DOWN：下拉
+     * TYPE_LOAD：上拉
+     */
+    public static int TYPE_DOWN = 0;
+    public static int TYPE_LOAD = 1;
+    /**
+     * 加载网址
+     * WEB_URI：加载第二个网址
+     * WEB_SHAREURI：加载第一个网址
+     */
+    public static int WEB_URI = 1;
+    public static int WEB_SHAREURI = 0;
+    /**
+     * 错误代码
+     */
+    public static int NETWORK_ERROR=404;
     private static BmobUri bmobUri;
 
     public static BmobUri getBmobUri() {
@@ -13,17 +57,6 @@ public class BmobUri {
         }
         return bmobUri;
     }
-    //接口地址
-    public static  String BMOBGO_URI="http://dailyapi.ibaozou.com/";
-    //文章内容地址
-    public static String BMOBGO_ARTICLE="http://dailyapi.ibaozou.com/api/v31/documents/";
-    /**
-     *     刷新状态
-     *     TYPE_DOWN：下拉
-     *     TYPE_LOAD：上拉
-     */
-    public static int  TYPE_DOWN=0;
-    public static int  TYPE_LOAD=1;
     /*
     初始界面：http://dailyapi.ibaozou.com/api/v31/tags/index
 
@@ -38,7 +71,8 @@ public class BmobUri {
 		赞： http://dailyapi.ibaozou.com/api/v31/rank/vote/day
 		评论：http://dailyapi.ibaozou.com/api/v31/rank/comment/day
 	    （7天）
-		阅读：http://dailyapi.ibaozou.com/api/v31/rank/read/week		赞：http://dailyapi.ibaozou.com/api/v31/rank/vote/week
+		阅读：http://dailyapi.ibaozou.com/api/v31/rank/read/week
+		赞：http://dailyapi.ibaozou.com/api/v31/rank/vote/week
 		评论：http://dailyapi.ibaozou.com/api/v31/rank/comment/week
 	    （30天）
 		阅读：http://dailyapi.ibaozou.com/api/v31/rank/read/month 		赞：http://dailyapi.ibaozou.com/api/v31/rank/vote/month

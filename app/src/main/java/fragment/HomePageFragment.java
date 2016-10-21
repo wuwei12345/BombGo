@@ -29,11 +29,15 @@ import Utils.SpaceItemDecoration;
 import adapter.HomePageAdapter;
 import adapter.HomeUserAdapter;
 import adapter.HomeVideoAdapter;
+import adapter.RankingAdapter;
 import bean.HomeBean;
+import bean.ReadBean;
 import bean.UserSubmissionBean;
 import bean.videoBean;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import initerface.Initerface;
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -41,13 +45,12 @@ import rx.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomePageFragment extends Fragment {
-    int valuse = 404;
+public class HomePageFragment extends Fragment implements Initerface {
+    int valuse = BmobUri.NETWORK_ERROR;
     String uri;
     @Bind(R.id.BmobGO_XRecyclerView)
     XRecyclerView BmobGOXRecyclerView;
     Banner homeTopBanner;
-    private View Header;
     //上拉加载后半段地址
     String loadUri;
     //首页
@@ -56,9 +59,18 @@ public class HomePageFragment extends Fragment {
     List<UserSubmissionBean.DataBean> mUserSubmission;
     //视频
     List<videoBean.DataBean> mVideoBean;
+    private View Header;
     private HomePageAdapter adapter;
     private HomeUserAdapter useradapter;
     private HomeVideoAdapter videoadapter;
+    //默认首页
+    private String RankingFlag = BmobUri.HOMEPAGE;
+    //阅读
+    private List<ReadBean.DataBean> mReadBean;
+    private RankingAdapter Readadapter;
+    private View view;
+
+    private String Teday = BmobUri.DAY;
 
     //接收标志位，以及接口地址
     public void setdate(int value, String uri) {
@@ -66,19 +78,141 @@ public class HomePageFragment extends Fragment {
         this.uri = uri;
     }
 
+    //接受排行榜的页面标识
+    public void setRanking(int value, String RankingFlag) {
+        this.valuse = value;
+        this.RankingFlag = RankingFlag;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+        view = inflater.inflate(R.layout.fragment_home_page, container, false);
         ButterKnife.bind(this, view);
         initview();
-        if (valuse != 404)
-            HomeData(valuse, uri, BmobUri.TYPE_DOWN);
+        initviewoper();
         return view;
     }
 
-    private void initview() {
-        if (valuse == 0) {
+    @Override
+    public void initview() {
+        Logger.i(RankingFlag);
+        switch (RankingFlag) {
+            //首页
+            case BmobUri.HOMEPAGE:
+                if (valuse != BmobUri.NETWORK_ERROR) {
+                    HomeData(valuse, uri, BmobUri.TYPE_DOWN);
+                } else {
+                    Toast.makeText(getActivity(), "错误，页面未能正常加载", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            //排行榜
+            case BmobUri.RANKING:
+                RankingData();
+                break;
+        }
+
+    }
+
+    private void RankingData() {
+        BmobGOXRecyclerView.setLoadingMoreEnabled(false);
+        initdata();
+        switch (valuse) {
+            //阅读
+            case 0:
+                RetrofitUtils
+                        .getInstance()
+                        .getRetrofit(BmobUri.BMOBGO_URI)
+                        .create(RetrofitUtils.BmobGo.class)
+                        .ReadDataBean(BmobUri.READ_URI + Teday)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<ReadBean>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(getActivity(), "错误" + e.toString(), Toast.LENGTH_SHORT).show();
+                                Logger.i(e.toString());
+                            }
+
+                            @Override
+                            public void onNext(ReadBean readBean) {
+                                mReadBean = readBean.getData();
+                                Readadapter = new RankingAdapter(mReadBean, getActivity());
+                                BmobGOXRecyclerView.setAdapter(Readadapter);
+                                BmobGOXRecyclerView.refreshComplete();
+                            }
+                        });
+                break;
+            //赞
+            case 1:
+                RetrofitUtils
+                        .getInstance()
+                        .getRetrofit(BmobUri.BMOBGO_URI)
+                        .create(RetrofitUtils.BmobGo.class)
+                        .GOODDataBean(BmobUri.GOOD_URI + Teday)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<ReadBean>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Logger.i(e.toString());
+                            }
+
+                            @Override
+                            public void onNext(ReadBean readBean) {
+                                mReadBean = readBean.getData();
+                                Readadapter = new RankingAdapter(mReadBean, getActivity());
+                                BmobGOXRecyclerView.setAdapter(Readadapter);
+                                BmobGOXRecyclerView.refreshComplete();
+                            }
+                        });
+                break;
+            //评论
+            case 2:
+                RetrofitUtils
+                        .getInstance()
+                        .getRetrofit(BmobUri.BMOBGO_URI)
+                        .create(RetrofitUtils.BmobGo.class)
+                        .GOODDataBean(BmobUri.COMMENT_URI + Teday)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<ReadBean>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Logger.i(e.toString());
+                            }
+
+                            @Override
+                            public void onNext(ReadBean readBean) {
+                                mReadBean = readBean.getData();
+                                Readadapter = new RankingAdapter(mReadBean, getActivity());
+                                BmobGOXRecyclerView.setAdapter(Readadapter);
+                                BmobGOXRecyclerView.refreshComplete();
+                            }
+                        });
+                break;
+        }
+    }
+
+    @Override
+    public void initdata() {
+        if (RankingFlag.equals(BmobUri.HOMEPAGE) && valuse == 0 && Header == null) {
             //添加头视图
             Header = LayoutInflater.from(getActivity()).inflate(R.layout.home_banner,
                     (ViewGroup) getActivity().findViewById(android.R.id.content), false);
@@ -96,10 +230,25 @@ public class HomePageFragment extends Fragment {
         //设置刷新样式以及主题
         BmobGOXRecyclerView.setRefreshProgressStyle(ProgressStyle.BallPulse);
         BmobGOXRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
+
+    }
+
+    @Override
+    public void initviewoper() {
         BmobGOXRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                HomeData(valuse, uri, BmobUri.TYPE_DOWN);
+                switch (RankingFlag) {
+                    //首页
+                    case BmobUri.HOMEPAGE:
+                        HomeData(valuse, uri, BmobUri.TYPE_DOWN);
+                        break;
+                    //排行榜
+                    case BmobUri.RANKING:
+                        RankingData();
+                        break;
+                }
+
             }
 
             @Override
@@ -109,8 +258,15 @@ public class HomePageFragment extends Fragment {
         });
     }
 
-
+    /**
+     * 首页的所有操作
+     *
+     * @param valuse
+     * @param uris
+     * @param TYPEFLAG
+     */
     private void HomeData(final int valuse, String uris, final int TYPEFLAG) {
+        initdata();
         //判断接口地址是否以 ／ 结尾
         if (!uris.endsWith("/")) {
             uris += "/";
@@ -126,9 +282,19 @@ public class HomePageFragment extends Fragment {
                         .homeDataBean(uris)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<HomeBean>() {
+                        .subscribe(new Observer<HomeBean>() {
                             @Override
-                            public void call(final HomeBean homeBean) {
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Logger.i(e.toString());
+                            }
+
+                            @Override
+                            public void onNext(final HomeBean homeBean) {
                                 //设置后半段地址，加载时用
                                 loadUri = "?timestamp=" + homeBean.getTimestamp() + "&/";
                                 //获得轮播图的图片和标题
@@ -145,7 +311,7 @@ public class HomePageFragment extends Fragment {
                                 homeTopBanner.setOnBannerClickListener(new OnBannerClickListener() {
                                     @Override
                                     public void OnBannerClick(int position) {
-                                        intentArticle(homeBean.getTop_stories().get(position).getDocument_id(), 0);
+                                        intentArticle(homeBean.getTop_stories().get(position - 1).getDocument_id(), BmobUri.WEB_SHAREURI);
                                     }
                                 });
                                 if (TYPEFLAG == BmobUri.TYPE_DOWN) {
@@ -157,7 +323,7 @@ public class HomePageFragment extends Fragment {
                                     BmobGOXRecyclerView.refreshComplete();
                                 } else if (TYPEFLAG == BmobUri.TYPE_LOAD) {
                                     mHomeBean.addAll(homeBean.getData());
-//                                    adapter=new HomePageAdapter();
+                                    // adapter=new HomePageAdapter();
                                     adapter.setHomeBean(mHomeBean, getActivity());
                                     adapter.notifyDataSetChanged();
                                     //停止刷新
@@ -167,7 +333,7 @@ public class HomePageFragment extends Fragment {
                                 adapter.setOnItemClickLitener(new HomePageAdapter.onItemClickLitener() {
                                     @Override
                                     public void onItemClick(View view, int postion) {
-                                        intentArticle(homeBean.getData().get(postion).getDocument_id(), 1);
+                                        intentArticle(homeBean.getData().get(postion - 2).getDocument_id(), BmobUri.WEB_URI);
                                     }
                                 });
                             }
@@ -182,9 +348,20 @@ public class HomePageFragment extends Fragment {
                         .userSubmissonBeans(uris)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<UserSubmissionBean>() {
+                        .subscribe(new Observer<UserSubmissionBean>() {
                             @Override
-                            public void call(final UserSubmissionBean userSubmissionBean) {
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Logger.i(e.toString());
+
+                            }
+
+                            @Override
+                            public void onNext(final UserSubmissionBean userSubmissionBean) {
                                 //设置后半段地址，加载时用
                                 loadUri = "?timestamp=" + userSubmissionBean.getTimestamp() + "&/";
                                 if (TYPEFLAG == BmobUri.TYPE_DOWN) {
@@ -205,7 +382,7 @@ public class HomePageFragment extends Fragment {
                                 useradapter.setOnItemClickLitener(new HomeUserAdapter.onItemClickLitener() {
                                     @Override
                                     public void onItemClick(View view, int postion) {
-                                        intentArticle(userSubmissionBean.getData().get(postion).getDocument_id(), 1);
+                                        intentArticle(userSubmissionBean.getData().get(postion).getDocument_id(), BmobUri.WEB_URI);
                                     }
                                 });
                             }
@@ -220,9 +397,19 @@ public class HomePageFragment extends Fragment {
                         .videoDataBean(uris)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<videoBean>() {
+                        .subscribe(new Observer<videoBean>() {
                             @Override
-                            public void call(final videoBean videobean) {
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Logger.i(e.toString());
+                            }
+
+                            @Override
+                            public void onNext(final videoBean videobean) {
                                 //设置后半段地址，加载时用
                                 loadUri = "?timestamp=" + videobean.getTimestamp() + "&/";
                                 if (TYPEFLAG == BmobUri.TYPE_DOWN) {
@@ -243,7 +430,7 @@ public class HomePageFragment extends Fragment {
                                 videoadapter.setOnItemClickLitener(new HomeVideoAdapter.onItemClickLitener() {
                                     @Override
                                     public void onItemClick(View view, int postion) {
-                                        intentArticle(videobean.getData().get(postion).getDocument_id(), 1);
+                                        intentArticle(videobean.getData().get(postion).getDocument_id(), BmobUri.WEB_SHAREURI);
                                     }
                                 });
                             }

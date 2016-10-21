@@ -28,10 +28,10 @@ import butterknife.ButterKnife;
 
 public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.MyViewHolder> {
     List<HomeBean.DataBean> homeBean;
-    List<UserSubmissionBean.DataBean> userBean;
     Context context;
     private View view;
     private MyViewHolder holder;
+    private  onItemClickLitener monItemClickLitener;
 
     public HomePageAdapter() {
 
@@ -44,9 +44,6 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.MyView
         notifyDataSetChanged();
     }
 
-
-
-    //视频
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             view = LayoutInflater.from(parent.getContext())
@@ -84,13 +81,6 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.MyView
         }
     }
 
-    public interface onItemClickLitener{
-        void onItemClick(View view,int postion);
-
-    }
-
-    private  onItemClickLitener monItemClickLitener;
-
     public void setOnItemClickLitener(onItemClickLitener monItemClickLitener){
         this.monItemClickLitener=monItemClickLitener;
     }
@@ -99,6 +89,11 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.MyView
     public int getItemCount() {
 
         return homeBean.size();
+    }
+
+    public interface onItemClickLitener{
+        void onItemClick(View view,int postion);
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

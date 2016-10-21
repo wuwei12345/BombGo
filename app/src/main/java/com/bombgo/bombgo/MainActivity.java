@@ -1,12 +1,13 @@
 package com.bombgo.bombgo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,21 +21,15 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import Utils.BmobUri;
-import Utils.RetrofitUtils;
 import adapter.BmobAdapter;
-import bean.bmobGoBean;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import fragment.BmobFragment;
-import fragment.HomePageFragment;
+import fragment.RankingFragment;
 import initerface.Initerface;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Initerface, BmobFragment.OnArticleSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Initerface {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.nav_view)
@@ -43,11 +38,13 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawerLayout;
     @Bind(R.id.act_fragmentlayout)
     FrameLayout actFragmentlayout;
+    @Bind(R.id.act_viewpage)
+    ViewPager actViewpage;
 
     private List<Fragment> fragmentlist = new ArrayList();
-    private BmobAdapter adapter;
+    private actViewAdapter adapter;
     private FragmentTransaction ft;
-    private BmobFragment bmobfragment;
+//    private List<Fragment> bmobfragment = new ArrayList<>();
     private Fragment mfragment;
 
     @Override
@@ -80,21 +77,14 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
+            actViewpage.setCurrentItem(0);
         } else if (id == R.id.nav_gallery) {
-            Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
-
+            actViewpage.setCurrentItem(1);
         } else if (id == R.id.nav_slideshow) {
-            Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_manage) {
-            Toast.makeText(this, "4", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_share) {
-            Toast.makeText(this, "5", Toast.LENGTH_SHORT).show();
-
-        } else if (id == R.id.nav_send) {
-            Toast.makeText(this, "6", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -108,6 +98,7 @@ public class MainActivity extends AppCompatActivity
     public void initview() {
 //        actBombgoTablayout.setTabMode(TabLayout.MODE_FIXED);
 //        actBmobMvp.setOffscreenPageLimit(3);
+        actViewpage.setOffscreenPageLimit(1);
         toolbar.setTitle("暴走日报");
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -115,30 +106,71 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         navView.setNavigationItemSelectedListener(this);
+        BmobFragment bm1=new BmobFragment();
+        RankingFragment bm2=new RankingFragment();
+//        BmobFragment bm3=new BmobFragment();
+//        BmobFragment bm4=new BmobFragment();
+        fragmentlist.add(bm1);
+        fragmentlist.add(bm2);
+//        fragmentlist.add(bm3);
+//        fragmentlist.add(bm4);
+
+        adapter=new actViewAdapter(getSupportFragmentManager(),fragmentlist);
+        actViewpage.setAdapter(adapter);
+//        actViewpage.
+
     }
 
     //加载数据
     @Override
     public void initdata() {
-        ft = getSupportFragmentManager().beginTransaction();
-        if (bmobfragment == null) {
-            bmobfragment = new BmobFragment();
-            ft.add(R.id.act_fragmentlayout, bmobfragment);
-        } else {
-            ft.show(bmobfragment);
-        }
-        ft.commit();
-
+        actViewpage.setCurrentItem(0);
     }
+
+//    private void LoadData(FragmentTransaction ft, int positon) {
+//        ft = getSupportFragmentManager().beginTransaction();
+//        hindFragment(ft, positon);
+//        if (fragmentlist.get(positon) != null) {
+//            if (!fragmentlist.get(positon).isAdded()) {
+////                bmobfragment.get(positon).setdata(positon);
+//                ft.add(R.id.act_fragmentlayout, fragmentlist.get(positon));
+//                ft.show(fragmentlist.get(positon));
+////                ft.replace(R.id.act_fragmentlayout,bmobfragment.get(positon));
+//            } else {
+//                Logger.i("显示fragment");
+//                ft.show(fragmentlist.get(positon));
+//            }
+//        }
+//        ft.commit();
+//    }
+
+//    private void hindFragment(FragmentTransaction ft, int postion) {
+//        for (int i = 0; i < bmobfragment.size(); i++) {
+//            ft.hide(bmobfragment.get(i));
+////                ft.remove(bmobfragment.get(i));
+//        }
+//    }
 
     @Override
     public void initviewoper() {
 
     }
 
+    class actViewAdapter extends FragmentPagerAdapter{
+        List<Fragment> listfragment;
+        public actViewAdapter(FragmentManager fm,List<Fragment> listfragment) {
+            super(fm);
+            this.listfragment=listfragment;
+        }
+        @Override
+        public Fragment getItem(int position) {
+            return listfragment.get(position);
+        }
 
-    @Override
-    public void onArticleSelected(int values) {
-//            Logger.i(values+"");
+        @Override
+        public int getCount() {
+            return listfragment.size();
+        }
     }
+
 }

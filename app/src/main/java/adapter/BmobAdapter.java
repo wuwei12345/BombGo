@@ -16,6 +16,7 @@ import fragment.HomePageFragment;
  */
 
 public class BmobAdapter extends FragmentPagerAdapter {
+    String[] Ranking;
     private List<HomePageFragment> list;//fragemtn列表
     private List<bmobGoBean.DataBean> list_Title;//列表名
     public BmobAdapter(FragmentManager fm, List<HomePageFragment> list, List<bmobGoBean.DataBean> list_Title) {
@@ -23,7 +24,11 @@ public class BmobAdapter extends FragmentPagerAdapter {
         this.list=list;
         this.list_Title=list_Title;
     }
-
+    public BmobAdapter(FragmentManager fm, List<HomePageFragment> list,String[] Ranking) {
+        super(fm);
+        this.list=list;
+        this.Ranking=Ranking;
+    }
     @Override
     public Fragment getItem(int position) {
         return list!=null?list.get(position):null;
@@ -31,13 +36,13 @@ public class BmobAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return list_Title!=null?list_Title.size():0;
+        return list_Title!=null?list_Title.size():Ranking.length;
     }
 
 
     //此方法用来显示tab上的名字
     @Override
     public CharSequence getPageTitle(int position) {
-        return list_Title.get(position%list_Title.size()).getName();
+        return list_Title!=null?list_Title.get(position%list_Title.size()).getName():Ranking[position];
     }
 }

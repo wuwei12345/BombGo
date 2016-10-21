@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_main"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.bombgo.bombgo.MainActivity"
     tools:showIn="@layout/app_bar_main">
@@ -13,6 +13,10 @@
     <FrameLayout
         android:id="@+id/act_fragmentlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
-
+        android:layout_height="match_parent"
+        android:visibility="gone"></FrameLayout>
+<Utils.NoScrollViewPager
+    android:id="@+id/act_viewpage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></Utils.NoScrollViewPager>
 </LinearLayout>
