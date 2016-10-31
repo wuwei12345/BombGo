@@ -83,16 +83,37 @@ public class HomePageFragment extends Fragment implements Initerface {
         this.valuse = value;
         this.RankingFlag = RankingFlag;
     }
-
-
+    //切换排行榜内容
+    public void setRankingDay(int day){
+    switch (day){
+        case 0:
+            Teday=BmobUri.DAY;
+            RankingData();
+            break;
+        case 1:
+            Teday=BmobUri.WEEK;
+            RankingData();
+            break;
+        case 2:
+            Teday=BmobUri.MONTH;
+            RankingData();
+            break;
+    }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home_page, container, false);
         ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initview();
         initviewoper();
-        return view;
+        Logger.i("homepagefragment");
     }
 
     @Override
@@ -114,7 +135,18 @@ public class HomePageFragment extends Fragment implements Initerface {
         }
 
     }
-
+    public void rankingclick(){
+        //排行榜点击事件
+        Readadapter.setOnItemClickLitener(new RankingAdapter.onItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                Intent intent=new Intent(getActivity(),ArticleActivity.class);
+                intent.putExtra("documentid",mReadBean.get(postion-1).getDocument_id()+"");
+                intent.putExtra("flag",0+"");
+                startActivity(intent);
+            }
+        });
+    }
     private void RankingData() {
         BmobGOXRecyclerView.setLoadingMoreEnabled(false);
         initdata();
@@ -146,6 +178,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                                 Readadapter = new RankingAdapter(mReadBean, getActivity());
                                 BmobGOXRecyclerView.setAdapter(Readadapter);
                                 BmobGOXRecyclerView.refreshComplete();
+                                rankingclick();
                             }
                         });
                 break;
@@ -175,6 +208,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                                 Readadapter = new RankingAdapter(mReadBean, getActivity());
                                 BmobGOXRecyclerView.setAdapter(Readadapter);
                                 BmobGOXRecyclerView.refreshComplete();
+                                rankingclick();
                             }
                         });
                 break;
@@ -204,6 +238,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                                 Readadapter = new RankingAdapter(mReadBean, getActivity());
                                 BmobGOXRecyclerView.setAdapter(Readadapter);
                                 BmobGOXRecyclerView.refreshComplete();
+                                rankingclick();
                             }
                         });
                 break;
@@ -235,6 +270,7 @@ public class HomePageFragment extends Fragment implements Initerface {
 
     @Override
     public void initviewoper() {
+        //刷新以及加载
         BmobGOXRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -243,10 +279,10 @@ public class HomePageFragment extends Fragment implements Initerface {
                     case BmobUri.HOMEPAGE:
                         HomeData(valuse, uri, BmobUri.TYPE_DOWN);
                         break;
-                    //排行榜
-                    case BmobUri.RANKING:
-                        RankingData();
-                        break;
+//                    //排行榜
+//                    case BmobUri.RANKING:
+//                        RankingData();
+//                        break;
                 }
 
             }
@@ -294,7 +330,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                             }
 
                             @Override
-                            public void onNext(final HomeBean homeBean) {
+                            public void onNext( HomeBean homeBean) {
                                 //设置后半段地址，加载时用
                                 loadUri = "?timestamp=" + homeBean.getTimestamp() + "&/";
                                 //获得轮播图的图片和标题
@@ -307,13 +343,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                                     }
                                     homeTopBanner.setImages(imglist).setBannerTitles(titlelist).start();
                                 }
-                                //轮播图点击事件
-                                homeTopBanner.setOnBannerClickListener(new OnBannerClickListener() {
-                                    @Override
-                                    public void OnBannerClick(int position) {
-                                        intentArticle(homeBean.getTop_stories().get(position - 1).getDocument_id(), BmobUri.WEB_SHAREURI);
-                                    }
-                                });
+                               homeclick(3);
                                 if (TYPEFLAG == BmobUri.TYPE_DOWN) {
                                     mHomeBean = homeBean.getData();
                                     adapter = new HomePageAdapter();
@@ -330,12 +360,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                                     BmobGOXRecyclerView.loadMoreComplete();
                                 }
                                 //item点击事件
-                                adapter.setOnItemClickLitener(new HomePageAdapter.onItemClickLitener() {
-                                    @Override
-                                    public void onItemClick(View view, int postion) {
-                                        intentArticle(homeBean.getData().get(postion - 2).getDocument_id(), BmobUri.WEB_URI);
-                                    }
-                                });
+                               homeclick(0);
                             }
                         });
                 break;
@@ -361,7 +386,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                             }
 
                             @Override
-                            public void onNext(final UserSubmissionBean userSubmissionBean) {
+                            public void onNext( UserSubmissionBean userSubmissionBean) {
                                 //设置后半段地址，加载时用
                                 loadUri = "?timestamp=" + userSubmissionBean.getTimestamp() + "&/";
                                 if (TYPEFLAG == BmobUri.TYPE_DOWN) {
@@ -379,12 +404,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                                     BmobGOXRecyclerView.loadMoreComplete();
                                 }
                                 //item点击事件
-                                useradapter.setOnItemClickLitener(new HomeUserAdapter.onItemClickLitener() {
-                                    @Override
-                                    public void onItemClick(View view, int postion) {
-                                        intentArticle(userSubmissionBean.getData().get(postion).getDocument_id(), BmobUri.WEB_URI);
-                                    }
-                                });
+                               homeclick(1);
                             }
                         });
                 break;
@@ -409,7 +429,7 @@ public class HomePageFragment extends Fragment implements Initerface {
                             }
 
                             @Override
-                            public void onNext(final videoBean videobean) {
+                            public void onNext( videoBean videobean) {
                                 //设置后半段地址，加载时用
                                 loadUri = "?timestamp=" + videobean.getTimestamp() + "&/";
                                 if (TYPEFLAG == BmobUri.TYPE_DOWN) {
@@ -427,19 +447,51 @@ public class HomePageFragment extends Fragment implements Initerface {
                                     BmobGOXRecyclerView.loadMoreComplete();
                                 }
                                 //item点击事件
-                                videoadapter.setOnItemClickLitener(new HomeVideoAdapter.onItemClickLitener() {
-                                    @Override
-                                    public void onItemClick(View view, int postion) {
-                                        intentArticle(videobean.getData().get(postion).getDocument_id(), BmobUri.WEB_SHAREURI);
-                                    }
-                                });
+                                homeclick(2);
                             }
                         });
                 break;
         }
 
     }
+    public void homeclick(int posint){
+        switch (posint){
+            case 0:
+                adapter.setOnItemClickLitener(new HomePageAdapter.onItemClickLitener() {
+                    @Override
+                    public void onItemClick(View view, int postion) {
+                        intentArticle(mHomeBean.get(postion - 2).getDocument_id(), BmobUri.WEB_URI);
+                    }
+                });
+                break;
+            case 1:
+                useradapter.setOnItemClickLitener(new HomeUserAdapter.onItemClickLitener() {
+                    @Override
+                    public void onItemClick(View view, int postion) {
+                        intentArticle(mUserSubmission.get(postion).getDocument_id(), BmobUri.WEB_URI);
+                    }
+                });
+                break;
+            case 2:
+                videoadapter.setOnItemClickLitener(new HomeVideoAdapter.onItemClickLitener() {
+                    @Override
+                    public void onItemClick(View view, int postion) {
+                        intentArticle(mVideoBean.get(postion).getDocument_id(), 0);
+                    }
+                });
+                break;
+            case 3:
+                //轮播图点击事件
+                homeTopBanner.setOnBannerClickListener(new OnBannerClickListener() {
+                    @Override
+                    public void OnBannerClick(int position) {
+                        intentArticle(mHomeBean.get(position).getDocument_id(), BmobUri.WEB_SHAREURI);
+                    }
+                });
+                break;
+        }
 
+    }
     //跳转到文章详情页面
     private void intentArticle(int document_id, int flag) {
         getActivity().startActivity(new Intent(getActivity(), ArticleActivity.class)

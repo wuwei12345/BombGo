@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHolder>{
     List<ReadBean.DataBean> readbean;
     Context context;
-
+    private RankingAdapter.onItemClickLitener monItemClickLitener;
 
     public RankingAdapter(List<ReadBean.DataBean> readbean, Context context) {
         this.readbean = readbean;
@@ -41,15 +41,32 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Picasso.with(context).load(readbean.get(position).getImage()).into(holder.homepageImg);
-        holder.tv_bmob_title.setText(readbean.get(position).getTitle());
-        holder.tv_bmob_zuozhe.setText(readbean.get(position).getAuthor_name()+"|"+readbean.get(position).getSection_name());
+        holder.tv_bmob_zuozhe.setText(readbean.get(position).getTitle());
+        holder.tv_bmob_title.setText(readbean.get(position).getAuthor_name()+"|"+readbean.get(position).getSection_name());
+        if (monItemClickLitener!=null){
+            holder.itemhomecardview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    monItemClickLitener.onItemClick(holder.itemView,holder.getLayoutPosition());
+                }
+            });
+        }
+    }
+
+    public void setOnItemClickLitener(RankingAdapter.onItemClickLitener monItemClickLitener){
+        this.monItemClickLitener=monItemClickLitener;
     }
 
     @Override
     public int getItemCount() {
         return readbean.size();
+    }
+
+    public interface onItemClickLitener{
+        void onItemClick(View view,int postion);
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -43,6 +43,10 @@ public class BmobUri {
      */
     public static String CHANNEL_URI="http://dailyapi.ibaozou.com/api/v31/channels/";
     /**
+     * 频道2
+     */
+    public static String CHANNEL_URI_TWO="http://dailyapi.ibaozou.com/api/v31/channels/";
+    /**
      * 加载网址
      * WEB_URI：加载第二个网址
      * WEB_SHAREURI：加载第一个网址
@@ -53,6 +57,10 @@ public class BmobUri {
      * 错误代码
      */
     public static int NETWORK_ERROR=404;
+    /**
+     * page
+     */
+    public static String PAGE="1";
     private static BmobUri bmobUri;
 
     public static BmobUri getBmobUri() {
@@ -85,6 +93,7 @@ public class BmobUri {
 频道：http://dailyapi.ibaozou.com/api/v31/channels/index?page=1&per_page=10& （page后面跟页码累加）
 
 频道二：http://dailyapi.ibaozou.com/api/v31/channels/3  （最后的数字对应上一个接口对应频道id）
+频道二加载： http://dailyapi.ibaozou.com/api/v31/channels/4?timestamp=1473080400&（timestamp对应频道二的timestamp）
 
 文章内容：http://dailyapi.ibaozou.com/api/v31/documents/32542 （最后数字对应上一个接口频道的document_id）
 

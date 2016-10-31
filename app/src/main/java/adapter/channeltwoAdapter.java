@@ -14,23 +14,26 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import Utils.BmobUri;
-import bean.channelBean;
+import bean.channeltwoBean;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by wuwei on 2016/10/21.
+ * Created by wuwei on 2016/10/29.
  */
 
-public class channelAdapter extends RecyclerView.Adapter<channelAdapter.ViewHolder> {
-    List<channelBean.DataBean> list;
+public class channeltwoAdapter extends RecyclerView.Adapter<channeltwoAdapter.ViewHolder> {
+    List<channeltwoBean.DataBean> list;
     Context context;
-    private channelAdapter.onItemClickLitener monItemClickLitener;
-
-    public channelAdapter(Context context, List<channelBean.DataBean> list) {
-        this.context = context;
+    private channeltwoAdapter.onItemClickLitener monItemClickLitener;
+    public channeltwoAdapter(List<channeltwoBean.DataBean> list, Context context) {
         this.list = list;
+        this.context = context;
+    }
+
+    public void setdata(channeltwoBean list){
+        this.list = list.getData();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -41,16 +44,11 @@ public class channelAdapter extends RecyclerView.Adapter<channelAdapter.ViewHold
         return holder;
     }
 
-    public void setdata( List<channelBean.DataBean> list){
-        this.list = list;
-        notifyDataSetChanged();
-    }
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Picasso.with(context).load(list.get(position).getThumbnail()).into(holder.homepageImg);
-        holder.tvBmobTitle.setText(list.get(position).getSummary());
-        holder.tvBmobZuozhe.setText(list.get(position).getName());
+        holder.tvBmobTitle.setText(list.get(position).getTitle());
+        holder.tvBmobZuozhe.setText(list.get(position).getAuthor_name()+"|"+list.get(position).getSection_name());
         if (monItemClickLitener!=null){
             holder.itemHomeCardview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -61,7 +59,7 @@ public class channelAdapter extends RecyclerView.Adapter<channelAdapter.ViewHold
         }
     }
 
-    public void setOnItemClickLitener(channelAdapter.onItemClickLitener monItemClickLitener){
+    public void setOnItemClickLitener(channeltwoAdapter.onItemClickLitener monItemClickLitener){
         this.monItemClickLitener=monItemClickLitener;
     }
 
@@ -75,11 +73,16 @@ public class channelAdapter extends RecyclerView.Adapter<channelAdapter.ViewHold
 
     }
 
+    static
+
+
     class ViewHolder extends RecyclerView.ViewHolder{
         @Bind(R.id.homepage_img)
         ImageView homepageImg;
         @Bind(R.id.tv_bmob_zuozhe)
         TextView tvBmobZuozhe;
+        @Bind(R.id.item_user_icon)
+        ImageView itemUserIcon;
         @Bind(R.id.tv_bmob_title)
         TextView tvBmobTitle;
         @Bind(R.id.item_home_cardview)

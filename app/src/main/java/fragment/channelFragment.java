@@ -1,6 +1,7 @@
 package fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bombgo.bombgo.ChannelActivity;
 import com.bombgo.bombgo.R;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -32,6 +34,7 @@ import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
+ * 频道
  */
 public class channelFragment extends Fragment implements Initerface {
 
@@ -41,9 +44,9 @@ public class channelFragment extends Fragment implements Initerface {
     @Bind(R.id.channel_pb)
     ProgressBar channelPb;
     channelAdapter channelAdapter;
-    int page=1;
+    int page = 1;
     //刷新状态
-    int Resfh_Type= BmobUri.TYPE_DOWN;
+    int Resfh_Type = BmobUri.TYPE_DOWN;
     private List<channelBean.DataBean> mchannelbean;
 
     public channelFragment() {
@@ -94,7 +97,7 @@ public class channelFragment extends Fragment implements Initerface {
                 .getInstance()
                 .getRetrofit(BmobUri.CHANNEL_URI)
                 .create(RetrofitUtils.BmobGo.class)
-                .channelDataBean(page+"")
+                .channelDataBean(page + "")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<channelBean>() {
@@ -111,10 +114,10 @@ public class channelFragment extends Fragment implements Initerface {
                     @Override
                     public void onNext(channelBean channelBeans) {
                         //如果为空则证明服务端没有更多数据
-                        if (channelBeans.getData()!=null) {
-                            switch (Resfh_Type){
+                        if (channelBeans.getData() != null) {
+                            switch (Resfh_Type) {
                                 case BmobUri.TYPE_DOWN:
-                                    mchannelbean=channelBeans.getData();
+                                    mchannelbean = channelBeans.getData();
                                     channelAdapter = new channelAdapter(getActivity(), mchannelbean);
                                     channerXrecyclerview.setAdapter(channelAdapter);
                                     //显示列表，隐藏pb
@@ -131,9 +134,19 @@ public class channelFragment extends Fragment implements Initerface {
                                     channerXrecyclerview.loadMoreComplete();
                                     break;
                             }
-                        }else{
-                            Toast.makeText(getActivity(),"没有更多",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), "没有更多", Toast.LENGTH_SHORT).show();
                         }
+                        //adapter点击事件
+                        channelAdapter.setOnItemClickLitener(new channelAdapter.onItemClickLitener() {
+                            @Override
+                            public void onItemClick(View view, int postion) {
+                                Intent intent=new Intent(getActivity(), ChannelActivity.class);
+                                intent.putExtra("id",mchannelbean.get(postion-1).getId()+"");
+                                intent.putExtra("title",mchannelbean.get(postion-1).getName());
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
     }
@@ -143,17 +156,18 @@ public class channelFragment extends Fragment implements Initerface {
         channerXrecyclerview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                page=1;
+                page = 1;
                 initdata();
             }
 
             @Override
             public void onLoadMore() {
                 //更改刷新状态为上拉加载
-                Resfh_Type=BmobUri.TYPE_LOAD;
+                Resfh_Type = BmobUri.TYPE_LOAD;
                 page++;
                 initdata();
             }
         });
+
     }
 }

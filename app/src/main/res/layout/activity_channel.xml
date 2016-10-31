@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_channel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.bombgo.bombgo.ChannelActivity">
+<android.support.v7.widget.Toolbar
+    android:id="@+id/act_channel_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ff3333">
+
+</android.support.v7.widget.Toolbar>
+<com.jcodecraeer.xrecyclerview.XRecyclerView
+    android:id="@+id/act_channel_recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></com.jcodecraeer.xrecyclerview.XRecyclerView>
+</LinearLayout>

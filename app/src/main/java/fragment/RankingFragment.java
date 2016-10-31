@@ -39,8 +39,12 @@ public class RankingFragment extends Fragment implements Initerface{
     public RankingFragment() {
         // Required empty public constructor
     }
-
-
+    //根据天数切换内容
+    public void setdata(int day){
+        for (int i=0;i<3;i++){
+            fragmentlist.get(i).setRankingDay(day);
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

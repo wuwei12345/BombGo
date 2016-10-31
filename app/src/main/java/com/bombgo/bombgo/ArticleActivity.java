@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import Utils.BmobUri;
@@ -18,12 +19,14 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ArticleActivity extends AppCompatActivity implements Initerface{
+public class ArticleActivity extends AppCompatActivity implements Initerface {
 
     @Bind(R.id.act_article_toolbar)
     Toolbar actArticleToolbar;
     @Bind(R.id.act_article_webview)
     WebView actArticleWebview;
+    @Bind(R.id.article_pb)
+    ProgressBar articlePb;
     private String DOCUMENTID;
     private String FLAG;
 
@@ -35,6 +38,12 @@ public class ArticleActivity extends AppCompatActivity implements Initerface{
         initview();
         initdata();
         initviewoper();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
     }
 
     @Override
@@ -50,8 +59,8 @@ public class ArticleActivity extends AppCompatActivity implements Initerface{
             }
         });
         //获取上一个界面传来的
-        DOCUMENTID=getIntent().getStringExtra("documentid");
-        FLAG=getIntent().getStringExtra("flag");
+        DOCUMENTID = getIntent().getStringExtra("documentid");
+        FLAG = getIntent().getStringExtra("flag");
     }
 
     @Override
@@ -60,7 +69,7 @@ public class ArticleActivity extends AppCompatActivity implements Initerface{
                 .getInstance()
                 .getRetrofit(BmobUri.BMOBGO_ARTICLE)
                 .create(RetrofitUtils.BmobGo.class)
-                .ArticleDataBean(BmobUri.BMOBGO_ARTICLE+DOCUMENTID)
+                .ArticleDataBean(BmobUri.BMOBGO_ARTICLE + DOCUMENTID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ArticleBean>() {
@@ -71,22 +80,24 @@ public class ArticleActivity extends AppCompatActivity implements Initerface{
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(ArticleActivity.this,"网络错误",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ArticleActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onNext(ArticleBean articleBean) {
-                        if (FLAG.equals("0")){
+                        if (FLAG.equals("0")) {
                             //WebView加载web资源
                             actArticleWebview.loadUrl(articleBean.getShare_url());
-                        }else{
+                        } else {
                             //WebView加载web资源
                             actArticleWebview.loadUrl(articleBean.getUrl());
                         }
+                        articlePb.setVisibility(View.GONE);
+                        actArticleWebview.setVisibility(View.VISIBLE);
                         //启用支持javascript
                         actArticleWebview.getSettings().setJavaScriptEnabled(true);
                         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
-                        actArticleWebview.setWebViewClient(new WebViewClient(){
+                        actArticleWebview.setWebViewClient(new WebViewClient() {
                             @Override
                             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                                 view.loadUrl(url);

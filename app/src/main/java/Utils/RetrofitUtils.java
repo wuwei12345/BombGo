@@ -5,14 +5,19 @@ import java.nio.channels.Channel;
 import bean.ArticleBean;
 import bean.HomeBean;
 import bean.ReadBean;
+import bean.SrearchBean;
 import bean.UserSubmissionBean;
 import bean.bmobGoBean;
 import bean.channelBean;
+import bean.channeltwoBean;
 import bean.videoBean;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
@@ -90,5 +95,16 @@ public class RetrofitUtils {
         */
         @GET("index?&per_page=10&")
         public Observable<channelBean> channelDataBean(@Query("page") String page);
+        /**
+         * 频道2
+         */
+        @GET
+        public Observable<channeltwoBean> channeltwoDataBean(@Url()String url);
+        /**
+         * 搜索
+         */
+        @FormUrlEncoded
+        @POST("api/v31/documents/search")
+        public Observable<SrearchBean> SrearchDataBean(@Field("page") String page,@Field("keyword") String keyword);
     }
 }
